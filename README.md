@@ -15,7 +15,7 @@ Türkçe arayüzlü, PHP ve PDO ile çalışan, üyelik ve konu/yanıt özellikl
 ## Gereksinimler
 
 - PHP 8.1 veya üzeri
-- PDO ve PDO_SQLite (varsayılan) veya PDO_MySQL
+- PDO, mbstring ve PDO_SQLite (varsayılan) veya PDO_MySQL
 - SQLite kullanırken uygulama dizininde SQLite dosyası oluşturma/yazma izni
 
 ## Kurulum
