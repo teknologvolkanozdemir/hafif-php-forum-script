@@ -53,8 +53,16 @@ $db->exec("CREATE TABLE IF NOT EXISTS posts (
     body TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 )");
-$db->exec('CREATE INDEX IF NOT EXISTS topics_category_idx ON topics (category_id)');
-$db->exec('CREATE INDEX IF NOT EXISTS posts_topic_idx ON posts (topic_id)');
+foreach (['topics_category_idx' => 'topics (category_id)', 'posts_topic_idx' => 'posts (topic_id)'] as $index => $table) {
+    if ($driver === 'sqlite') {
+        $db->exec("CREATE INDEX IF NOT EXISTS $index ON $table");
+    } elseif ($driver === 'mysql') {
+        $existingIndex = $db->query("SHOW INDEX FROM " . explode(' ', $table)[0] . " WHERE Key_name = '$index'")->fetch();
+        if (!$existingIndex) {
+            $db->exec("CREATE INDEX $index ON $table");
+        }
+    }
+}
 $count = (int) $db->query('SELECT COUNT(*) FROM categories')->fetchColumn();
 if ($count === 0) {
     $insertCategory = $db->prepare('INSERT INTO categories (name, description) VALUES (?, ?)');
